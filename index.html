@@ -11,36 +11,55 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Merriweather+Sans:wght@400&display=swap"
         rel="stylesheet">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-MF1jzX9d4q8ALi5JgCcg93A/6nYhiD0tGxU+2+0t6FbY2vm+Fb6FuROjSPF5HLbh8m+Whg+XY4M+w+n4H+x97g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+
 </head>
 
 <body>
     <div class="main">
         <div class="bg">
-            <img src="https://images.unsplash.com/photo-1539963831389-5c234596a54f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTM2fHxtdXNpYyUyMGJnfGVufDB8MHwwfHx8MA%3D%3D"
-                alt="">
+            <img class="bg-img" src="" alt="">
         </div>
 
         <div class="overlay"></div>
 
         <div class="music-player">
             <div class="float">
-                <img src="https://images.unsplash.com/photo-1539963831389-5c234596a54f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTM2fHxtdXNpYyUyMGJnfGVufDB8MHwwfHx8MA%3D%3D"
-                    alt="">
+                <img class="flt-img" src="" alt="">
             </div>
             <div class="details">
                 <div class="music-name">Intellect</div>
                 <div class="artist">Yung Logos</div>
-                <input class="timing" type="range">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                    <div class="time">
+                        <span class="start">0.00</span>
+                        <span class="end">0.00</span>
+                    </div>
+                </div>
+                <audio class="audio" src=""></audio>
+
                 <div class="buttons">
-                    <img class="prev" src="images/prev.png" alt="previous">
-                    <img class="pause" src="images/pause.png" alt="pause">
-                    <img class="play" src="images/play.png" alt="play">
-                    <img class="next" src="images/next.png" alt="next">
+                    <svg class="shuffle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path
+                            d="M403.8 34.4c12-5 25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6l0-32-32 0c-10.1 0-19.6 4.7-25.6 12.8L284 229.3 244 176l31.2-41.6C293.3 110.2 321.8 96 352 96l32 0 0-32c0-12.9 7.8-24.6 19.8-29.6zM164 282.7L204 336l-31.2 41.6C154.7 401.8 126.2 416 96 416l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c10.1 0 19.6-4.7 25.6-12.8L164 282.7zm274.6 188c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6l0-32-32 0c-30.2 0-58.7-14.2-76.8-38.4L121.6 172.8c-6-8.1-15.5-12.8-25.6-12.8l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c30.2 0 58.7 14.2 76.8 38.4L326.4 339.2c6 8.1 15.5 12.8 25.6 12.8l32 0 0-32c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64z" />
+                    </svg>
+                    <img class="prev" title="previous" src="images/prev.png" alt="previous">
+                    <img class="play-pause" title="Play" src="images/play.png" alt="Play">
+                    <img class="next" title="next" src="images/next.png" alt="next">
+                    <i class="ri-play-list-fill" id="playlist"></i>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <script src="script.js"></script>
 </body>
 
 </html>
