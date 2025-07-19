@@ -10,6 +10,8 @@ const next = document.querySelector(".next");
 const playPauseBtn = document.querySelector(".play-pause");
 const float_img = document.querySelector(".flt-img");
 const audio = document.querySelector(".audio");
+const shuffle = document.querySelector(".shuffle");
+const playlistbtn = document.getElementById("playlistbtn");
 
 const songs = [
     {
@@ -115,16 +117,30 @@ playPauseBtn.addEventListener("click", () => {
 
 // Load previous song
 prev.addEventListener("click", () => {
-    currentSong = (currentSong - 1 + songs.length) % songs.length;
+    if (isShuffled) {
+        currentIndex = (currentIndex + 1) % shuffledOrder.length;
+        currentSong = shuffledOrder[currentIndex];
+    } else {
+        currentSong = (currentSong - 1 + songs.length) % songs.length;
+        currentIndex = currentIndex;
+    }
     loadSong(currentSong);
     playSong();
+
 });
 
 // Load next song
 next.addEventListener("click", () => {
-    currentSong = (currentSong + 1) % songs.length;
+    if (isShuffled) {
+        currentIndex = (currentIndex - 1 + shuffledOrder.length) % shuffledOrder.length;
+        currentSong = shuffledOrder[currentIndex];
+    } else {
+        currentSong = (currentSong + 1) % songs.length;
+        currentIndex = currentSong
+    }
     loadSong(currentSong);
     playSong();
+
 });
 
 // Load song by index
@@ -155,6 +171,7 @@ audio.addEventListener("timeupdate", () => {
     }
 });
 
+
 // Seek audio
 progressBar.addEventListener("click", (e) => {
     const width = progressBar.clientWidth;
@@ -169,3 +186,172 @@ function formatTime(seconds) {
     const s = Math.floor(seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
 }
+
+let shuffledOrder = [];
+let isShuffled = false;
+let currentIndex = 0;
+
+shuffle.addEventListener("click", () => {
+    isShuffled = !isShuffled;
+    console.log("hi")
+
+    if (isShuffled) {
+        shuffledOrder = [...Array(songs.length).keys()];
+        shuffledOrder = shuffledOrder.filter(i => i !== currentSong);
+        shuffleArray(shuffledOrder);
+        shuffledOrder.unshift(currentSong);
+        currentIndex = 0;
+        shuffle.classList.add("active");
+    }
+    else {
+        currentIndex = currentSong;
+        shuffle.classList.remove("active");
+    }
+})
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+const volumeBar = document.querySelector(".volume-bar");
+const volumeFill = document.querySelector(".volume-fill");
+
+volumeBar.addEventListener("click", (e) => {
+    const barWidth = volumeBar.clientWidth;
+    const clickX = e.offsetX;
+    const volume = clickX / barWidth;
+
+    audio.volume = volume;
+
+    const percent = volume * 100;
+    volumeFill.style.width = `${percent}%`;
+    document.querySelector(".volume-thumb").style.left = `${percent}%`;
+});
+
+// On page load
+const initialVolume = audio.volume * 100;
+volumeFill.style.width = `${initialVolume}%`;
+document.querySelector(".volume-thumb").style.left = `${initialVolume}%`;
+
+// Auto play next song when current ends
+audio.addEventListener("ended", () => {
+    if (isShuffled) {
+        // Move to next shuffled index
+        currentIndex = (currentIndex + 1) % shuffledOrder.length;
+        currentSong = shuffledOrder[currentIndex];
+    } else {
+        // Normal order
+        currentSong = (currentSong + 1) % songs.length;
+        currentIndex = currentSong;
+    }
+
+    loadSong(currentSong);
+    playSong();
+});
+
+//Song Mute Feature
+
+const mute_btn = document.querySelector(".mute");
+const muteIcon = document.querySelector(".mute i");
+
+let isMute = false;
+
+mute_btn.addEventListener("click", () => {
+    mute_Toggle();
+})
+
+isMute = true;
+
+function mute_Toggle() {
+    audio.muted = isMute;
+
+    if (isMute) {
+        muteIcon.classList.remove("fa-volume-up");
+        muteIcon.classList.add("fa-volume-mute");
+        muteIcon.title = "Mute";
+        isMute = false;
+    }
+    else {
+        muteIcon.classList.remove("fa-volume-mute");
+        muteIcon.classList.add("fa-volume-up");
+        muteIcon.title = "Volume";
+        isMute = true;
+    }
+}
+
+const playlistElement = document.getElementById("playlist");
+const playlist_container = document.querySelector(".playlist-container");
+const details = document.querySelector(".details");
+const float = document.querySelector(".float");
+const close = document.querySelector(".ri-close-line");
+let isPlayListShow = false;
+
+playlistbtn.addEventListener("click", () => {
+    if (!isPlayListShow) {
+        playlist_container.style.display = "block";
+        details.style.display = "none";
+        float.style.display = "none";
+        renderPlaylist();
+        isPlayListShow = true;
+    }
+    else {
+        playlist_container.style.display = "none";
+        details.style.display = "block";
+        float.style.display = "block";
+        isPlayListShow = false;
+    }
+})
+
+close.addEventListener("click", () => {
+    playlist_container.style.display = "none";
+    details.style.display = "block";
+    float.style.display = "block";
+    isPlayListShow = false;
+})
+
+function renderPlaylist() {
+    playlistElement.innerHTML = "";
+
+    songs.forEach((song, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <div class="song-info">
+                <img src="${song.img}" alt="${song.name}">
+                <div class="song-text">
+                    <span class="song-name">${song.name}</span>
+                    <span class="artist-name">${song.artist}</span>
+                </div>
+            </div>
+            <div class="like">
+                <i class="ri-heart-line"></i>
+                <i class="ri-heart-fill"></i>
+            </div>
+        `;
+
+        li.addEventListener("click", () => {
+            currentSong = index;
+            loadSong(currentSong);
+            playSong();
+        });
+
+        playlistElement.appendChild(li);
+    });
+}
+
+const heart_line = document.querySelector(".ri-heart-line");
+const heart_fill = document.querySelector(".ri-heart-fill");
+
+heart_line.addEventListener("click",()=>{
+    console.log("clicked")
+    heart_fill.style.display = "block";
+    heart_line.style.display = "none";
+})
+
+heart_fill.addEventListener("click",()=>{
+    heart_line.style.display = "block";
+    heart_fill.style.display = "none";
+})
+
