@@ -299,16 +299,16 @@ playlistbtn.addEventListener("click", () => {
     }
     else {
         playlist_container.style.display = "none";
-        details.style.display = "block";
         float.style.display = "block";
+        details.style.display = "flex";
         isPlayListShow = false;
     }
 })
 
 close.addEventListener("click", () => {
     playlist_container.style.display = "none";
-    details.style.display = "block";
     float.style.display = "block";
+    details.style.display = "flex";
     isPlayListShow = false;
 })
 
@@ -319,39 +319,56 @@ function renderPlaylist() {
         const li = document.createElement("li");
         li.innerHTML = `
             <div class="song-info">
-                <img src="${song.img}" alt="${song.name}">
-                <div class="song-text">
+                <img src="${song.img}" alt="${song.name}" class="list-img">
+                <div class="song-text data">
                     <span class="song-name">${song.name}</span>
                     <span class="artist-name">${song.artist}</span>
                 </div>
             </div>
             <div class="like">
                 <i class="ri-heart-line"></i>
-                <i class="ri-heart-fill"></i>
+                <i class="ri-heart-fill" style="display: none;"></i>
             </div>
         `;
 
+        // Add click to play song
         li.addEventListener("click", () => {
             currentSong = index;
             loadSong(currentSong);
             playSong();
+            playlist_container.style.display = "none";
+            float.style.display = "block";
+            details.style.display = "flex";
+            isPlayListShow = false;
+        });
+
+        // Handle heart icon toggle
+        const heartLine = li.querySelector(".ri-heart-line");
+        const heartFill = li.querySelector(".ri-heart-fill");
+
+        // Check localStorage for this song index's like state
+        const likedSongs = JSON.parse(localStorage.getItem("likedSongs")) || {};
+        if (likedSongs[index]) {
+            heartLine.style.display = "none";
+            heartFill.style.display = "inline";
+        }
+
+        heartLine.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent triggering li click
+            heartLine.style.display = "none";
+            heartFill.style.display = "inline";
+            likedSongs[index] = true;
+            localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
+        });
+
+        heartFill.addEventListener("click", (e) => {
+            e.stopPropagation();
+            heartFill.style.display = "none";
+            heartLine.style.display = "inline";
+            likedSongs[index] = true;
+            localStorage.removeItem("likedSongs", JSON.stringify(likedSongs));
         });
 
         playlistElement.appendChild(li);
     });
 }
-
-const heart_line = document.querySelector(".ri-heart-line");
-const heart_fill = document.querySelector(".ri-heart-fill");
-
-heart_line.addEventListener("click",()=>{
-    console.log("clicked")
-    heart_fill.style.display = "block";
-    heart_line.style.display = "none";
-})
-
-heart_fill.addEventListener("click",()=>{
-    heart_line.style.display = "block";
-    heart_fill.style.display = "none";
-})
-
