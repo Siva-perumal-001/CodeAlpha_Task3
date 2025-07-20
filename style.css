@@ -9,6 +9,9 @@ html {
     height: 100%;
     width: 100%;
     font-family: 'Playfair Display', serif;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .main,
@@ -307,6 +310,10 @@ span {
 }
 
 @media (max-width:600px) {
+    .main{
+        height: 100vh;
+        width: 100vw;
+    }
     .music-player {
         height: 50vh;
         width: 40vh;
