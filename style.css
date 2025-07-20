@@ -314,6 +314,11 @@ span {
         height: 100vh;
         width: 100vw;
     }
+
+    .bg{
+        height: 100%;
+    }
+
     .music-player {
         height: 50vh;
         width: 40vh;
